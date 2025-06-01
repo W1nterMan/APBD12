@@ -50,4 +50,20 @@ public class TripsService : ITripsService
         };
         return paginatedTrips;
     }
+
+    public Task<bool> TripExists(int idTrip)
+    {
+        return _context.Trip.AnyAsync(t => t.IdTrip == idTrip);
+    }
+
+    public async Task<bool> TripStarted(int idTrip)
+    {
+        var trip = await _context.Trip.FirstOrDefaultAsync(t => t.IdTrip == idTrip);
+        if (trip.DateFrom < DateTime.Now)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
